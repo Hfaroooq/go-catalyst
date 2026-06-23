@@ -18,8 +18,7 @@ from catalyst.config import Settings
 
 REQUIRED_ENV = {
     "DATABASE_URL": "postgresql://user:pass@localhost:5432/catalyst",
-    "REDDIT_CLIENT_ID": "client-id",
-    "REDDIT_CLIENT_SECRET": "client-secret",
+    "YOUTUBE_API_KEY": "yt-api-key",
     "ANTHROPIC_API_KEY": "sk-ant-test",
 }
 
@@ -31,28 +30,29 @@ def test_settings_load_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     settings = Settings(_env_file=None)  # type: ignore[call-arg]
 
     assert settings.database_url == REQUIRED_ENV["DATABASE_URL"]
-    assert settings.reddit_client_id == "client-id"
+    assert settings.youtube_api_key == "yt-api-key"
     assert settings.anthropic_api_key == "sk-ant-test"
-    # Default applies when not provided.
-    assert settings.tracked_subreddits == "SaaS,startups,Entrepreneur"
-    assert settings.subreddit_list == ["SaaS", "startups", "Entrepreneur"]
+    # Defaults apply when not provided.
+    assert settings.youtube_channels == ""
+    assert settings.channel_list == []
+    assert settings.client_channel is None
 
 
 def test_missing_required_secret_raises(monkeypatch: pytest.MonkeyPatch) -> None:
     for key, value in REQUIRED_ENV.items():
         monkeypatch.setenv(key, value)
     # Remove one required secret.
-    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
+    monkeypatch.delenv("YOUTUBE_API_KEY", raising=False)
 
     with pytest.raises(ValidationError):
         Settings(_env_file=None)  # type: ignore[call-arg]
 
 
-def test_subreddit_list_handles_whitespace(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_channel_list_handles_whitespace(monkeypatch: pytest.MonkeyPatch) -> None:
     for key, value in REQUIRED_ENV.items():
         monkeypatch.setenv(key, value)
-    monkeypatch.setenv("TRACKED_SUBREDDITS", " SaaS , startups ,, Entrepreneur ")
+    monkeypatch.setenv("YOUTUBE_CHANNELS", " @hubspot , UC123 ,, @notion ")
 
     settings = Settings(_env_file=None)  # type: ignore[call-arg]
 
-    assert settings.subreddit_list == ["SaaS", "startups", "Entrepreneur"]
+    assert settings.channel_list == ["@hubspot", "UC123", "@notion"]

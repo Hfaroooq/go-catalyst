@@ -98,6 +98,8 @@ class Post(Base):
     url: Mapped[str | None] = mapped_column(Text)
     permalink: Mapped[str | None] = mapped_column(Text)
     domain: Mapped[str | None] = mapped_column(String(255))
+    thumbnail_url: Mapped[str | None] = mapped_column(Text)  # video thumbnail (YouTube)
+    duration_seconds: Mapped[int | None] = mapped_column(Integer)  # video length in seconds (YouTube)
     author: Mapped[str | None] = mapped_column(String(255))
     is_client: Mapped[bool] = mapped_column(Boolean, server_default=text("false"))
     posted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))

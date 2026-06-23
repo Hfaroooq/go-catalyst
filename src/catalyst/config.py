@@ -34,28 +34,27 @@ class Settings(BaseSettings):
 
     # --- Required secrets (no defaults: missing -> startup error) ---
     database_url: str = Field(..., description="Postgres connection string (Supabase).")
-    reddit_client_id: str = Field(..., description="Reddit app client id.")
-    reddit_client_secret: str = Field(..., description="Reddit app client secret.")
+    youtube_api_key: str = Field(..., description="YouTube Data API v3 key (public-data API key).")
     anthropic_api_key: str = Field(..., description="Anthropic API key for Claude.")
 
-    # --- Values with sensible defaults ---
-    reddit_user_agent: str = Field(
-        default="catalyst-tracker/0.1 by u/your_reddit_username",
-        description="Reddit requires a descriptive User-Agent on every request.",
+    # --- Values with sensible defaults / optional ---
+    youtube_channels: str = Field(
+        default="",
+        description="Comma-separated YouTube channel IDs or @handles to track.",
     )
-    tracked_subreddits: str = Field(
-        default="SaaS,startups,Entrepreneur",
-        description="Comma-separated subreddits to track (no 'r/' prefix).",
+    client_channel: str | None = Field(
+        default=None,
+        description="The channel ID/@handle treated as 'the client' (its videos are 'our' content).",
     )
     client_domain: str | None = Field(
         default=None,
-        description="Domain treated as the 'client' (posts linking here are 'our' content).",
+        description="Domain treated as 'client' content (videos whose description links here).",
     )
 
     @property
-    def subreddit_list(self) -> list[str]:
-        """``tracked_subreddits`` split into a clean list."""
-        return [s.strip() for s in self.tracked_subreddits.split(",") if s.strip()]
+    def channel_list(self) -> list[str]:
+        """``youtube_channels`` split into a clean list."""
+        return [c.strip() for c in self.youtube_channels.split(",") if c.strip()]
 
 
 @lru_cache
