@@ -1,0 +1,39 @@
+name: pull-and-analyze
+
+# Self-sustaining cycle: pull YouTube data, classify, refresh recommendations,
+# and recompute ROI — on a schedule, with a manual "Run workflow" button for demos.
+on:
+  schedule:
+    - cron: "0 * * * *"   # hourly (UTC); GitHub may delay scheduled runs under load
+  workflow_dispatch: {}
+
+concurrency:
+  group: pull-and-analyze
+  cancel-in-progress: false
+
+jobs:
+  cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
+      - name: Install dependencies
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          uv sync --frozen
+
+      - name: Run one cycle
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          YOUTUBE_CHANNELS: ${{ secrets.YOUTUBE_CHANNELS }}
+          CLIENT_CHANNEL: ${{ secrets.CLIENT_CHANNEL }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          CLIENT_DOMAIN: ${{ secrets.CLIENT_DOMAIN }}
+        run: |
+          export PATH="$HOME/.local/bin:$PATH"
+          uv run python -m catalyst.jobs.run_cycle
