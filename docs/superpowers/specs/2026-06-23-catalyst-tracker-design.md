@@ -7,6 +7,15 @@
 > This document is both the engineering spec and the backbone of the 1–2 page memo
 > required by the challenge. plain companion for users: `docs/docs.md`.
 
+> **⚠️ Platform pivot (2026-06-23):** This spec was written for **Reddit**. During the build we
+> discovered Reddit closed *self-service* API access (Nov 2025; manual approval now required) and
+> X has no free tier, so we pivoted to **YouTube** (free, key-only, and on the brief's list). The
+> system is platform-agnostic, so only the ingestion adapter changed. Where this doc says
+> "Reddit / subreddit / score / upvote_ratio," read "YouTube / channel / likes / —". Mapping:
+> subreddit→channel, post→video, score→likeCount, num_comments→commentCount, view_count→views;
+> plus YouTube adds `duration_seconds` (Short vs long-form) and `thumbnail_url`. This section will
+> be fully reconciled when the memo is assembled (Goal 10).
+
 ---
 
 ## 1. Goal & scope
