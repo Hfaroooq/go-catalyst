@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     # --- Required secrets (no defaults: missing -> startup error) ---
     database_url: str = Field(..., description="Postgres connection string (Supabase).")
     youtube_api_key: str = Field(..., description="YouTube Data API v3 key (public-data API key).")
-    anthropic_api_key: str = Field(..., description="Anthropic API key for Claude.")
+    gemini_api_key: str = Field(..., description="Google Gemini API key (free tier) for LLM steps.")
 
     # --- Values with sensible defaults / optional ---
     youtube_channels: str = Field(

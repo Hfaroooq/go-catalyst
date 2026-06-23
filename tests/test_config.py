@@ -19,7 +19,7 @@ from catalyst.config import Settings
 REQUIRED_ENV = {
     "DATABASE_URL": "postgresql://user:pass@localhost:5432/catalyst",
     "YOUTUBE_API_KEY": "yt-api-key",
-    "ANTHROPIC_API_KEY": "sk-ant-test",
+    "GEMINI_API_KEY": "gemini-key",
 }
 
 
@@ -31,7 +31,7 @@ def test_settings_load_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
 
     assert settings.database_url == REQUIRED_ENV["DATABASE_URL"]
     assert settings.youtube_api_key == "yt-api-key"
-    assert settings.anthropic_api_key == "sk-ant-test"
+    assert settings.gemini_api_key == "gemini-key"
     # Defaults apply when not provided.
     assert settings.youtube_channels == ""
     assert settings.channel_list == []
@@ -42,7 +42,7 @@ def test_missing_required_secret_raises(monkeypatch: pytest.MonkeyPatch) -> None
     for key, value in REQUIRED_ENV.items():
         monkeypatch.setenv(key, value)
     # Remove one required secret.
-    monkeypatch.delenv("YOUTUBE_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_API_KEY", raising=False)
 
     with pytest.raises(ValidationError):
         Settings(_env_file=None)  # type: ignore[call-arg]
