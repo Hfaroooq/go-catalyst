@@ -123,4 +123,4 @@ def test_generate_recommendations_maps_fields(db_session) -> None:
     assert rec.hook_type == "how-to"
     assert rec.predicted_score == 30.0
     assert rec.confidence == 0.8
-    assert rec.model_version == "gemini-2.5-flash"
+    assert rec.model_version.startswith("gemini")

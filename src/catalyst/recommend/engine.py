@@ -25,9 +25,9 @@ from sqlalchemy.orm import Session
 
 from catalyst.analysis.metrics import client_vs_field, summarize, top_by_attribute
 from catalyst.db.models import AttributePerformance, Platform, Recommendation
-from catalyst.recommend.gemini import GeminiClient
+from catalyst.recommend.gemini import DEFAULT_MODEL, GeminiClient
 
-MODEL_VERSION = "gemini-2.5-flash"
+MODEL_VERSION = DEFAULT_MODEL
 
 # Which dimensions we track marginal performance for. Each gets its own
 # attribute_performance rows (other dimension columns left as "").

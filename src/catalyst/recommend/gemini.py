@@ -20,7 +20,7 @@ import httpx
 from catalyst.config import get_settings
 
 GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta"
-DEFAULT_MODEL = "gemini-2.5-flash"
+DEFAULT_MODEL = "gemini-2.5-flash-lite"
 
 
 class GeminiError(RuntimeError):
@@ -73,7 +73,9 @@ class GeminiClient:
                 except json.JSONDecodeError as exc:
                     raise GeminiError(f"non-JSON response: {text[:200]}") from exc
             last_error = f"{response.status_code}: {response.text[:200]}"
-            if response.status_code in (429, 500, 503):
+            # Retry only transient overload (500/503). Do NOT retry 429: it's a quota
+            # error that won't clear in seconds, and retrying just burns more quota.
+            if response.status_code in (500, 503):
                 time.sleep(min(2 ** attempt, 20))  # exponential backoff: 1,2,4,8,16s
                 continue
             break
