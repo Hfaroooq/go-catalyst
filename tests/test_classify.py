@@ -101,3 +101,23 @@ def test_run_classification_is_idempotent(db_session) -> None:
 
     # Re-running classifies nothing new (idempotent).
     assert run_classification(db_session, client=FakeGemini()) == 0
+
+
+class _RaisingGemini:
+    """Simulates a persistently failing LLM (e.g. a 503)."""
+
+    def generate_json(self, prompt: str, **kwargs: object):
+        raise RuntimeError("503 high demand")
+
+
+def test_run_classification_survives_batch_failure(db_session) -> None:
+    platform = ensure_platform(db_session, "youtube")
+    source = ensure_source(db_session, platform, "UCfail")
+    _make_post(db_session, platform, source, "vfail", "How to do SEO", ["seo"])
+
+    # Every batch's LLM call raises -> batches are skipped, nothing crashes,
+    # and the post stays unclassified so it's retried on a later run.
+    assert run_classification(db_session, client=_RaisingGemini()) == 0
+    classified_ids = set(db_session.scalars(select(PostClassification.post_id)))
+    post = db_session.scalar(select(Post).where(Post.external_id == "vfail"))
+    assert post.id not in classified_ids

@@ -159,7 +159,11 @@ def run_classification(
     for start in range(0, len(posts), batch_size):
         batch = posts[start : start + batch_size]
         videos = [(str(p.id), p.title, p.body or "") for p in batch]
-        angles = classify_angles(client, videos)
+        try:
+            angles = classify_angles(client, videos)
+        except Exception as exc:  # noqa: BLE001 — skip this batch, retry next run
+            print(f"   classify batch skipped (will retry next run): {exc}", flush=True)
+            continue
         for post in batch:
             session.add(
                 PostClassification(
