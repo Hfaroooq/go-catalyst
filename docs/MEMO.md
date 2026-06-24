@@ -44,8 +44,9 @@ closed *self-service* API access (Nov 2025 — manual approval now required), an
 free tier (pay-per-use). YouTube is free, key-only (no approval, no billing), explicitly on the
 brief's list, and gives rich metrics that genuinely change over time (views/likes/comments) plus a
 real *format* signal (Shorts vs long-form via duration). The client is modelled as a B2B SaaS
-channel (HubSpot in the demo), benchmarked against the field (Ahrefs, Notion). Because the system is
-platform-agnostic, swapping the client/channels is a config change.
+channel (Arrivy, a field-service ops platform, in the demo), benchmarked against the field
+(ServiceTitan, Jobber, Housecall Pro). Because the system is platform-agnostic, swapping the
+client/channels is a config change.
 
 ## Analysis, recommendations, and the learning loop
 
@@ -53,7 +54,8 @@ Analysis builds a per-post **performance view** (each post's latest snapshot + t
 attributes by **engagement rate = (likes + comments) ÷ views** rather than raw views — so a small
 client is compared *fairly* to big channels, measuring resonance, not just reach. It surfaces top
 topics/hooks/formats/angles, best posting day, and the client-vs-field gap (e.g. the demo shows the
-client's Shorts badly trailing the field — an actionable target).
+client — a small challenger — trailing the field on engagement across formats, ~3.5 vs ~26 per 1k on
+long-form — an actionable target).
 
 The recommendation loop runs each cycle: (1) recompute realized engagement per attribute into
 `attribute_performance` with a trend; (2) **score the previous cycle's ideas against reality** — did
@@ -86,6 +88,6 @@ too. **First *engineering* break point: the `metric_snapshots` write/scan volume
 partitioning + rollup plan above. YouTube quota (10k units/day) is ample because channels resolve by
 ID (1 unit); the only expensive call is the search fallback, used rarely.
 
-**Verified:** 28 tests pass; the full cycle runs end-to-end locally and **in the cloud** (a GitHub
+**Verified:** 29 tests pass; the full cycle runs end-to-end locally and **in the cloud** (a GitHub
 Actions run wrote a fresh `job_runs` row + recommendation cycle); the dashboard renders against live
 data (checked with Streamlit's AppTest).
