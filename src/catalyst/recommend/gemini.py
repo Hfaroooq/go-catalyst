@@ -42,7 +42,7 @@ class GeminiClient:
     def from_settings(cls, model: str = DEFAULT_MODEL) -> "GeminiClient":
         return cls(get_settings().gemini_api_key, model)
 
-    def generate_json(self, prompt: str, *, system: str | None = None, retries: int = 3) -> Any:
+    def generate_json(self, prompt: str, *, system: str | None = None, retries: int = 5) -> Any:
         """Call Gemini and parse the response as JSON."""
         body: dict[str, Any] = {
             "contents": [{"parts": [{"text": prompt}]}],
@@ -74,7 +74,7 @@ class GeminiClient:
                     raise GeminiError(f"non-JSON response: {text[:200]}") from exc
             last_error = f"{response.status_code}: {response.text[:200]}"
             if response.status_code in (429, 500, 503):
-                time.sleep(2 * (attempt + 1))
+                time.sleep(min(2 ** attempt, 20))  # exponential backoff: 1,2,4,8,16s
                 continue
             break
         raise GeminiError(last_error)

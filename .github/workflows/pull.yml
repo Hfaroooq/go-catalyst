@@ -4,7 +4,8 @@ name: pull-and-analyze
 # and recompute ROI — on a schedule, with a manual "Run workflow" button for demos.
 on:
   schedule:
-    - cron: "0 * * * *"   # hourly (UTC); GitHub may delay scheduled runs under load
+    - cron: "0 6 * * *"   # daily at 06:00 UTC. GitHub treats schedules as best-effort and may delay/skip.
+    # For every-2-days instead, use: "0 6 */2 * *"
   workflow_dispatch: {}
 
 concurrency:
