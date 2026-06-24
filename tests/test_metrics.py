@@ -49,7 +49,8 @@ def test_top_by_attribute_ranks_by_engagement(db_session) -> None:
     _seed_post(db_session, platform, source, "zz_h2", "ZZ_HIGH", views=200, likes=100, comments=100)
     _seed_post(db_session, platform, source, "zz_l1", "ZZ_LOW", views=1000, likes=5, comments=5)
 
-    topics = top_by_attribute(db_session, "topic")
+    # High limit so our synthetic ZZ_* topics aren't crowded out of the top-N by real data.
+    topics = top_by_attribute(db_session, "topic", limit=500)
     ranked = {row["value"]: i for i, row in enumerate(topics)}
     assert ranked["ZZ_HIGH"] < ranked["ZZ_LOW"]  # higher engagement ranks first
 

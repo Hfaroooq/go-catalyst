@@ -42,6 +42,7 @@ def _perf_base():
     return (
         select(
             Post.id.label("post_id"),
+            Post.title.label("title"),
             Post.is_client.label("is_client"),
             Post.posted_at.label("posted_at"),
             PostClassification.topic.label("topic"),
@@ -126,6 +127,29 @@ def client_vs_field(session: Session, attribute: str = "format") -> list[dict]:
         side = "client" if r.is_client else "field"
         entry[side] = {"n": r.n, "engagement_per_1k": round(float(r.avg_eng or 0) * 1000, 2)}
     return list(grouped.values())
+
+
+def top_videos(session: Session, *, client_only: bool | None = None, limit: int = 15) -> list[dict]:
+    """Top individual videos by engagement — concrete examples to ground the recommender."""
+    base = _perf_base()
+    query = select(
+        base.c.title, base.c.topic, base.c.format, base.c.views, base.c.engagement_rate
+    )
+    if client_only is True:
+        query = query.where(base.c.is_client.is_(True))
+    elif client_only is False:
+        query = query.where(base.c.is_client.is_(False))
+    query = query.order_by(base.c.engagement_rate.desc()).limit(limit)
+    return [
+        {
+            "title": r.title,
+            "topic": r.topic,
+            "format": r.format,
+            "views": int(r.views or 0),
+            "engagement_per_1k": round(float(r.engagement_rate or 0) * 1000, 2),
+        }
+        for r in session.execute(query)
+    ]
 
 
 def summarize(session: Session) -> dict:
