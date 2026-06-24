@@ -5,7 +5,7 @@
 **Status:** Approved design — ready for implementation planning
 
 > This document is both the engineering spec and the backbone of the 1–2 page memo
-> required by the challenge. plain companion for users: `docs/docs.md`.
+> required by the challenge.
 
 > **⚠️ Platform pivot (2026-06-23):** This spec was written for **Reddit**. During the build we
 > discovered Reddit closed *self-service* API access (Nov 2025; manual approval now required) and

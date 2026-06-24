@@ -24,7 +24,7 @@ src/catalyst/
   jobs/          # run_cycle.py = the scheduled entrypoint
 dashboard/app.py # Streamlit (reads only)
 migrations/      # Alembic; .github/workflows/pull.yml = hourly cron
-docs/            # MEMO.md, docs.md (plain), superpowers/ (spec + plan)
+docs/            # MEMO.md, superpowers/ (design spec + implementation plan)
 ```
 
 ## Conventions (follow these)
@@ -70,9 +70,8 @@ uv run pytest                             # tests
    `docs/superpowers/specs/2026-06-23-catalyst-tracker-design.md` (the memo's backbone).
 2. **Plan.** A goal-by-goal implementation plan in `docs/superpowers/plans/`.
 3. **Execute, one goal at a time.** Each of the 10 goals followed the same loop: write the code +
-   tests, **verify live against the real DB/APIs**, update `docs/docs.md` (a plain
-   companion + walkthrough notes for the internal owner), then **commit** — giving a real,
-   readable commit history.
+   tests, **verify live against the real DB/APIs**, then **commit** — giving a real, readable commit
+   history.
 4. **Catch the AI when it's wrong.** Decisions were pushed on, not accepted blindly — e.g. the
    platform was pivoted from Reddit (self-service API closed Nov 2025) to YouTube, and an
    over-claimed reading of the brief was corrected against the actual text.

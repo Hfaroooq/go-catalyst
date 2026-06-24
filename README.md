@@ -10,7 +10,6 @@ live dashboard.
 
 - 📄 Memo (architecture, data model, scale, cost): [`docs/MEMO.md`](docs/MEMO.md)
 - 🧱 Design spec: [`docs/superpowers/specs/2026-06-23-catalyst-tracker-design.md`](docs/superpowers/specs/2026-06-23-catalyst-tracker-design.md)
-- 📘 plain walkthrough of every part: [`docs/docs.md`](docs/docs.md)
 
 ## What it does
 

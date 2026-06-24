@@ -3,11 +3,10 @@
 > **For agentic workers:** Use superpowers:executing-plans to implement this plan goal-by-goal,
 > with a review + walkthrough checkpoint after each goal. Steps use checkbox (`- [ ]`) syntax.
 >
-> **Note on granularity:** This plan is executed in the same session by the author of the spec,
-> and reviewed by a internal stakeholder via the *working result + plain docs* (not
-> by reading code in this plan). So tasks are sized as **goals/milestones** with concrete
-> deliverables and verification, rather than pre-written line-by-line code. Each goal ends with a
-> visible, testable deliverable and a docs update.
+> **Note on granularity:** This plan is executed in the same session by the author of the spec and
+> reviewed via the *working result* (not by reading code in this plan). So tasks are sized as
+> **goals/milestones** with concrete deliverables and verification, rather than pre-written
+> line-by-line code. Each goal ends with a visible, testable deliverable.
 
 **Goal:** A self-sustaining Reddit content-analytics tracker that pulls on a schedule, learns
 what works, recommends what to make next, proves ROI for a simulated B2B SaaS client, and shows
@@ -99,7 +98,7 @@ from env (and fails loudly if a required one is missing), `.env.example`, and a 
 - [ ] Create folder/package structure
 - [ ] Write `config.py` (pydantic-settings) + `.env.example`
 - [ ] Test: config loads from env; missing required key raises
-- [ ] Update `docs/docs.md` (what a "project skeleton" and "config/secrets" are)
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 2: Database foundation (the schema + first real migration)
@@ -125,7 +124,7 @@ browser**. `alembic upgrade head` runs clean; `alembic downgrade` then `upgrade`
 - [ ] Wire Alembic; autogenerate + hand-check migration `0001`
 - [ ] Apply to Supabase; verify tables + indexes exist
 - [ ] Test: models import; a round-trip insert/read works against a test DB
-- [ ] Update `docs/docs.md` (tables/rows/indexes/migrations in plain)
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 3: Reddit ingestion (real data flowing in)
@@ -150,7 +149,7 @@ duplicates, missing `view_count`), and what's "buy" (PRAW) vs "build" (snapshott
 - [ ] Implement pipeline: normalize → upsert (dedup) → snapshot → log to `job_runs`
 - [ ] Test: same post twice = one row, metrics updated; payload → correct fields
 - [ ] Run live; confirm rows in Supabase
-- [ ] Update `docs/docs.md`
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 4: Classification (give each post its attributes)
@@ -172,7 +171,7 @@ doesn't re-classify already-tagged posts.
 - [ ] Implement classifier (batched, idempotent, versioned)
 - [ ] Test: mapping logic with a stubbed LLM response
 - [ ] Run live; confirm classifications in DB
-- [ ] Update `docs/docs.md`
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 5: Analysis (surface what's working)
@@ -192,7 +191,7 @@ data; tests pass on fixed input.
 - [ ] Implement aggregation queries
 - [ ] Test: known fixtures → expected top-N / timing
 - [ ] Run on real data; sanity-check output
-- [ ] Update `docs/docs.md`
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 6: Recommendations + the learning loop (the heart)
@@ -215,7 +214,7 @@ not just re-prompting.
 - [ ] Implement scoring of last round → update `attribute_performance`
 - [ ] Test: rec + outcome fixtures → expected attribute update + hit-rate
 - [ ] Run two cycles; show sharpening
-- [ ] Update `docs/docs.md`
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 7: ROI funnel (prove it to a client)
@@ -235,7 +234,7 @@ changing an assumption changes the output predictably.
 - [ ] Implement funnel math + assumptions loading
 - [ ] Test: assumptions in → expected pipeline $ out
 - [ ] Run; write snapshot
-- [ ] Update `docs/docs.md`
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 8: The self-sustaining cycle + cron
@@ -255,7 +254,7 @@ it on schedule and on manual trigger; `job_runs` shows each run.
 - [ ] Implement `run_cycle` entrypoint
 - [ ] Write the Actions workflow (cron + workflow_dispatch + secrets)
 - [ ] Push; confirm a scheduled + manual run succeeds and writes `job_runs`
-- [ ] Update `docs/docs.md`
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 9: Dashboard (deploy it live)
@@ -274,7 +273,7 @@ assumption sliders), reading the latest DB state; deployed to Streamlit Communit
 - [ ] Build the three views against the DB
 - [ ] Deploy to Streamlit Community Cloud with DB secret
 - [ ] Confirm live URL reflects real data
-- [ ] Update `docs/docs.md`
+- [ ] Update the docs
 - [ ] Commit
 
 ## Goal 10: README, tests green, memo finalized
